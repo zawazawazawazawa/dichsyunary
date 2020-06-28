@@ -5,6 +5,12 @@ import 'react-calendar/dist/Calendar.css';
 
 import Modal from 'react-modal';
 
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from './aws-exports';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+
+Amplify.configure(awsconfig);
+
 const customStyles = {
   content : {
     top                   : '50%',
@@ -41,6 +47,7 @@ function App() {
 
   return (
     <div id="root">
+      <AmplifySignOut />
       <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}
@@ -63,4 +70,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);

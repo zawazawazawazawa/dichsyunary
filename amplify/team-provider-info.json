@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-dicsyunary-dev-153121-authRole",
+            "UnauthRoleArn": "arn:aws:iam::174141334174:role/amplify-dicsyunary-dev-153121-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::174141334174:role/amplify-dicsyunary-dev-153121-authRole",
+            "Region": "ap-northeast-1",
+            "DeploymentBucketName": "amplify-dicsyunary-dev-153121-deployment",
+            "UnauthRoleName": "amplify-dicsyunary-dev-153121-unauthRole",
+            "StackName": "amplify-dicsyunary-dev-153121",
+            "StackId": "arn:aws:cloudformation:ap-northeast-1:174141334174:stack/amplify-dicsyunary-dev-153121/06208460-b909-11ea-9e6c-0e8a9cd56576",
+            "AmplifyAppId": "d1zxycgr35g880"
+        },
+        "categories": {
+            "auth": {
+                "dicsyunary0e99eada": {}
+            }
+        }
+    }
+}
