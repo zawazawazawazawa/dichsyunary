@@ -1,0 +1,5 @@
+type Memo @model {
+  id: ID!
+  memo: String!
+  date: String!
+}

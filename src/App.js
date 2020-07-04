@@ -9,6 +9,9 @@ import Amplify, { Auth } from 'aws-amplify';
 import awsconfig from './aws-exports';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 
+import { API, graphqlOperation } from "aws-amplify";
+import * as mutations from './graphql/mutations';
+
 Amplify.configure(awsconfig);
 
 const customStyles = {
@@ -28,9 +31,12 @@ Modal.setAppElement('#root')
 
 function App() {
   const [modalIsOpen,setIsOpen] = React.useState(false);
-  const [inputValue, setInputValue] = React.useState("")
-  function openModal() {
+  const [inputValue, setInputValue] = React.useState();
+  const [selectedDay, setSelectedDay] = React.useState();
+
+  function openModal(event) {
     setIsOpen(true);
+    setSelectedDay(event);
   }
 
   function afterOpenModal() {
@@ -42,7 +48,16 @@ function App() {
   }
 
   function handleSubmit(){
-    alert("Submit!!")
+    const memoDetails = {
+      memo: inputValue,
+      date: selectedDay
+    };
+    
+    const createMemo = () => (
+      API.graphql(graphqlOperation(mutations.createMemo, {input: memoDetails}))
+    )
+    
+    createMemo();
   }
 
   return (
