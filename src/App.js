@@ -12,6 +12,8 @@ import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from './graphql/mutations';
 
+import { listMemos } from './graphql/queries';
+
 Amplify.configure(awsconfig);
 
 const customStyles = {
@@ -33,6 +35,7 @@ function App() {
   const [modalIsOpen,setIsOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState();
   const [selectedDay, setSelectedDay] = React.useState();
+  const [memos, setMemos] = React.useState([]);
 
   function openModal(event) {
     setIsOpen(true);
@@ -40,7 +43,15 @@ function App() {
   }
 
   function afterOpenModal() {
-    console.log("open!!!!")
+    const memosList = getMemos();
+    console.log(memosList)
+    setMemos(memosList);
+  }
+
+  const getMemos = async () => {
+    const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(selectedDay)
+    const memos = await API.graphql(graphqlOperation(listMemos, { filter: { date: { eq: formatedSelectedDay } } }));
+    return memos;
   }
 
   function closeModal(){
@@ -50,7 +61,7 @@ function App() {
   function handleSubmit(){
     const memoDetails = {
       memo: inputValue,
-      date: selectedDay
+      date: new Intl.DateTimeFormat('ja-JP').format(selectedDay)
     };
     
     const createMemo = () => (
