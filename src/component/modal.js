@@ -22,11 +22,11 @@ const MemoModal = (props) => {
     }
   };
 
-  function closeModal(){
+  const closeModal = () => {
     props.setIsOpen(false);
   }
 
-  function afterOpenModal() {
+  const afterOpenModal = () => {
     let memos;
     (async () => {
       const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
@@ -37,7 +37,7 @@ const MemoModal = (props) => {
     })(); 
   }
 
-  function handleSubmit(){
+  const handleSubmit = () => {
     const memoDetails = {
       memo: inputValue,
       date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)

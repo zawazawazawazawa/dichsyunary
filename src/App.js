@@ -12,12 +12,12 @@ import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 
 Amplify.configure(awsconfig);
 
-function App() {
+const App = () => {
   const [isOpen,setIsOpen] = React.useState(false);
   const [selectedDay, setSelectedDay] = React.useState();
 
 
-  function openModal(event) {
+  const openModal = (event) => {
     setIsOpen(true);
     setSelectedDay(event);
   }
