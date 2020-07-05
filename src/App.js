@@ -5,7 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 
 import Modal from 'react-modal';
 
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 
