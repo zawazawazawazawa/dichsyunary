@@ -6,7 +6,7 @@ import * as mutations from '../graphql/mutations';
 
 const MemoModal = (props) => {
   const [memos, setMemos] = React.useState([]);
-  const [inputValue, setInputValue] = React.useState();
+  const [inputValue, setInputValue] = React.useState('');
   Modal.setAppElement('#root')
 
   const customStyles = {
@@ -27,13 +27,12 @@ const MemoModal = (props) => {
   }
 
   const afterOpenModal = () => {
-    let memos;
     (async () => {
       const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
-      memos = await API.graphql(graphqlOperation(listMemos, { filter: { date: { eq: formatedSelectedDay } } })
-                ).then(({ data: { listMemos } }) => {
-                  setMemos(listMemos.items);
-                });
+      await API.graphql(graphqlOperation(listMemos, { filter: { date: { eq: formatedSelectedDay } } })
+              ).then(({ data: { listMemos } }) => {
+                setMemos(listMemos.items);
+              });
     })(); 
   }
 
@@ -86,7 +85,7 @@ const MemoModal = (props) => {
         </label>
         <input type="submit" value="Submit" />
       </form>
-      { memos != undefined &&
+      { memos !== undefined &&
         <>
           <label>Memos: </label>
           <MemosList />
