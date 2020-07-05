@@ -43,15 +43,14 @@ function App() {
   }
 
   function afterOpenModal() {
-    const memosList = getMemos();
-    console.log(memosList)
-    setMemos(memosList);
-  }
-
-  const getMemos = async () => {
-    const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(selectedDay)
-    const memos = await API.graphql(graphqlOperation(listMemos, { filter: { date: { eq: formatedSelectedDay } } }));
-    return memos;
+    let memos;
+    (async () => {
+      const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(selectedDay)
+      memos = await API.graphql(graphqlOperation(listMemos, { filter: { date: { eq: formatedSelectedDay } } })
+                ).then(({ data: { listMemos } }) => {
+                  setMemos(listMemos.items);
+                });
+    })(); 
   }
 
   function closeModal(){
@@ -71,6 +70,27 @@ function App() {
     createMemo();
   }
 
+  const MemosList = () => (
+    <table>
+      <thead>
+        <tr>
+          <th>createdAt</th>
+          <th>memo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {memos.map(function(item, index) {
+          return (
+            <tr key={index}>
+              <td>{item.createdAt}</td>
+              <td>{item.memo}</td>
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  );
+
   return (
     <div id="root">
       <AmplifySignOut />
@@ -87,6 +107,12 @@ function App() {
             <input type="text" value={inputValue} onChange={ (e) => (setInputValue(e.target.value)) }/>
           </label>
         <input type="submit" value="Submit" />
+        { memos != undefined &&
+          <>
+            <label>Memos: </label>
+            <MemosList />
+          </>
+        }
       </form>
       </Modal>
       <Calendar
