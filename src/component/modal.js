@@ -3,10 +3,12 @@ import Modal from 'react-modal';
 import { listMemos } from '../graphql/queries';
 import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from '../graphql/mutations';
+import beer_icon from '../images/drink_beer.png'
 
 const MemoModal = (props) => {
   const [memos, setMemos] = React.useState([]);
   const [inputValue, setInputValue] = React.useState('');
+  const [beerCount, setBeerCount] = React.useState(0);
   Modal.setAppElement('#root')
 
   const customStyles = {
@@ -79,6 +81,8 @@ const MemoModal = (props) => {
       contentLabel="Example Modal"
     >
       <form onSubmit={handleSubmit}>
+        <button style={{width: "10%"}} onClick={() => (setBeerCount(beerCount + 1))}><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></button>
+        {/* <div>Beer Count: {beerCount}</div> */}
         <label>
           Memo:
           <input type="text" value={inputValue} onChange={ (e) => (setInputValue(e.target.value)) }/>
