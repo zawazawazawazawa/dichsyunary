@@ -72,6 +72,10 @@ const MemoModal = (props) => {
     </table>
   );
 
+  const CountUp = () => {
+    setBeerCount(beerCount + 1);
+  }
+
   return (
     <Modal
       isOpen={props.isOpen}
@@ -81,8 +85,8 @@ const MemoModal = (props) => {
       contentLabel="Example Modal"
     >
       <form onSubmit={handleSubmit}>
-        <button style={{width: "10%"}} onClick={() => (setBeerCount(beerCount + 1))}><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></button>
-        {/* <div>Beer Count: {beerCount}</div> */}
+        <div style={{width: "10%"}} onClick={CountUp}><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></div>
+        <div>Beer Count: {beerCount}</div>
         <label>
           Memo:
           <input type="text" value={inputValue} onChange={ (e) => (setInputValue(e.target.value)) }/>
