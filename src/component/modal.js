@@ -6,13 +6,16 @@ import * as mutations from '../graphql/mutations';
 import beer_icon from '../images/drink_beer.png'
 
 const MemoModal = (props) => {
+  // TODO: 
+  // modalが開いたタイミングでfetchする
+  // 毎度データをCreateしているのでUpdateへ変更
   const initalBeerCount = () => {
     (async () => {
       const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
       await API.graphql(graphqlOperation(listAlcohols, { filter: { date: { eq: formatedSelectedDay } } })
               ).then(({ data: { listAlcohols } }) => {
-                console.log("count: ", listAlcohols)
-                setBeerCount(listAlcohols.items[0]?.beer || 0);
+                console.log("count: ", listAlcohols.items.sort())
+                setBeerCount(listAlcohols.items[listAlcohols.items.length - 1]?.beer || 0);
               });
     })(); 
   }
