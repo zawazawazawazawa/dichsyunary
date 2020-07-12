@@ -3,3 +3,9 @@ type Memo @model {
   memo: String!
   date: String!
 }
+
+type Alcohol @model {
+  id: ID!
+  beer: Int
+  date: String!
+}

@@ -34,3 +34,36 @@ export const onDeleteMemo = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAlcohol = /* GraphQL */ `
+  subscription OnCreateAlcohol {
+    onCreateAlcohol {
+      id
+      beer
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAlcohol = /* GraphQL */ `
+  subscription OnUpdateAlcohol {
+    onUpdateAlcohol {
+      id
+      beer
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAlcohol = /* GraphQL */ `
+  subscription OnDeleteAlcohol {
+    onDeleteAlcohol {
+      id
+      beer
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;

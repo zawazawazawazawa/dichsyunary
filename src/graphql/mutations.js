@@ -43,3 +43,45 @@ export const deleteMemo = /* GraphQL */ `
     }
   }
 `;
+export const createAlcohol = /* GraphQL */ `
+  mutation CreateAlcohol(
+    $input: CreateAlcoholInput!
+    $condition: ModelAlcoholConditionInput
+  ) {
+    createAlcohol(input: $input, condition: $condition) {
+      id
+      beer
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAlcohol = /* GraphQL */ `
+  mutation UpdateAlcohol(
+    $input: UpdateAlcoholInput!
+    $condition: ModelAlcoholConditionInput
+  ) {
+    updateAlcohol(input: $input, condition: $condition) {
+      id
+      beer
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAlcohol = /* GraphQL */ `
+  mutation DeleteAlcohol(
+    $input: DeleteAlcoholInput!
+    $condition: ModelAlcoholConditionInput
+  ) {
+    deleteAlcohol(input: $input, condition: $condition) {
+      id
+      beer
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;

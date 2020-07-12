@@ -1,28 +1,28 @@
 {
-	"auth": {
-		"dicsyunary0e99eada": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": [],
-			"customAuth": false
-		}
-	},
-	"api": {
-		"dicsyunary": {
-			"service": "AppSync",
-			"providerPlugin": "awscloudformation",
-			"output": {
-				"authConfig": {
-					"additionalAuthenticationProviders": [],
-					"defaultAuthentication": {
-						"authenticationType": "API_KEY",
-						"apiKeyConfig": {
-							"description": "test",
-							"apiKeyExpirationDays": "7"
-						}
-					}
-				}
-			}
-		}
-	}
+    "auth": {
+        "dicsyunary0e99eada": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [],
+            "customAuth": false
+        }
+    },
+    "api": {
+        "dicsyunary": {
+            "service": "AppSync",
+            "providerPlugin": "awscloudformation",
+            "output": {
+                "authConfig": {
+                    "additionalAuthenticationProviders": [],
+                    "defaultAuthentication": {
+                        "authenticationType": "API_KEY",
+                        "apiKeyConfig": {
+                            "description": "",
+                            "apiKeyExpirationDays": "7"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

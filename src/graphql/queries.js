@@ -30,3 +30,32 @@ export const listMemos = /* GraphQL */ `
     }
   }
 `;
+export const getAlcohol = /* GraphQL */ `
+  query GetAlcohol($id: ID!) {
+    getAlcohol(id: $id) {
+      id
+      beer
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAlcohols = /* GraphQL */ `
+  query ListAlcohols(
+    $filter: ModelAlcoholFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAlcohols(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        beer
+        date
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

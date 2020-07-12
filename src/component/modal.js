@@ -1,14 +1,24 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { listMemos } from '../graphql/queries';
+import { listMemos, listAlcohols } from '../graphql/queries';
 import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from '../graphql/mutations';
 import beer_icon from '../images/drink_beer.png'
 
 const MemoModal = (props) => {
+  const initalBeerCount = () => {
+    (async () => {
+      const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+      await API.graphql(graphqlOperation(listAlcohols, { filter: { date: { eq: formatedSelectedDay } } })
+              ).then(({ data: { listAlcohols } }) => {
+                console.log("count: ", listAlcohols)
+                setBeerCount(listAlcohols.items[0]?.beer || 0);
+              });
+    })(); 
+  }
   const [memos, setMemos] = React.useState([]);
   const [inputValue, setInputValue] = React.useState('');
-  const [beerCount, setBeerCount] = React.useState(0);
+  const [beerCount, setBeerCount] = React.useState(initalBeerCount);
   Modal.setAppElement('#root')
 
   const customStyles = {
@@ -39,16 +49,17 @@ const MemoModal = (props) => {
   }
 
   const handleSubmit = () => {
-    const memoDetails = {
-      memo: inputValue,
-      date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
-    };
-    
-    const createMemo = () => (
-      API.graphql(graphqlOperation(mutations.createMemo, {input: memoDetails}))
-    )
-    
-    createMemo();
+    (() => {
+      API.graphql(graphqlOperation(mutations.createMemo, {input: {
+        memo: inputValue,
+        date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+      }}));
+
+      API.graphql(graphqlOperation(mutations.createAlcohol, {input: {
+        beer: beerCount,
+        date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+      }}));
+    })();
   }
 
   const MemosList = () => (
