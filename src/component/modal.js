@@ -6,12 +6,11 @@ import * as mutations from '../graphql/mutations';
 import beer_icon from '../images/drink_beer.png'
 
 const MemoModal = (props) => {
-  // TODO: 
-  // 毎度データをCreateしているのでUpdateへ変更
-
-  const [memos, setMemos] = React.useState([]);
+  const [memo, setMemo] = React.useState();
   const [inputValue, setInputValue] = React.useState('');
   const [beerCount, setBeerCount] = React.useState(0);
+  const [alcoholeRecordID, setAlcoholeRecordID] = React.useState('');
+  const [memoID, setMemoID] = React.useState('')
   Modal.setAppElement('#root')
 
   const customStyles = {
@@ -36,31 +35,49 @@ const MemoModal = (props) => {
       const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
       await API.graphql(graphqlOperation(listMemos, { filter: { date: { eq: formatedSelectedDay } } })
               ).then(({ data: { listMemos } }) => {
-                setMemos(listMemos.items);
+                setMemo(listMemos.items[listMemos.items.length - 1] || null);
+                setMemoID(listMemos.items[listMemos.items.length - 1]?.id || "")
               });
     })(); 
     (async () => {
       const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
-      console.log("date using filter: ", formatedSelectedDay)
       await API.graphql(graphqlOperation(listAlcohols, { filter: { date: { eq: formatedSelectedDay } } })
               ).then(({ data: { listAlcohols } }) => {
-                console.log("count: ", listAlcohols.items.sort())
                 setBeerCount(listAlcohols.items[listAlcohols.items.length - 1]?.beer || 0);
+                setAlcoholeRecordID(listAlcohols.items[listAlcohols.items.length - 1]?.id || "")
               });
-    })(); 
+    })();
   }
 
   const handleSubmit = () => {
     (() => {
-      API.graphql(graphqlOperation(mutations.createMemo, {input: {
-        memo: inputValue,
-        date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
-      }}));
+      if (memoID == "") {
+        API.graphql(graphqlOperation(mutations.createMemo, {input: {
+          memo: inputValue,
+          date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+        }}));
+      } else {
+        API.graphql(graphqlOperation(mutations.updateMemo, {input: {
+          id: memoID,
+          memo: inputValue,
+          date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+        }}));
+      }
 
-      API.graphql(graphqlOperation(mutations.createAlcohol, {input: {
-        beer: beerCount,
-        date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
-      }}));
+
+      if (alcoholeRecordID === "") {
+        API.graphql(graphqlOperation(mutations.createAlcohol, {input: {
+          beer: beerCount,
+          date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+        }}));
+      } else {
+        API.graphql(graphqlOperation(mutations.updateAlcohol, {input: {
+          id: alcoholeRecordID,
+          beer: beerCount,
+          date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+        }}));
+      }
+
     })();
   }
 
@@ -68,19 +85,15 @@ const MemoModal = (props) => {
     <table>
       <thead>
         <tr>
-          <th>createdAt</th>
+          <th>updatedAt</th>
           <th>memo</th>
         </tr>
       </thead>
       <tbody>
-        {memos.map(function(item, index) {
-          return (
-            <tr key={index}>
-              <td>{item.createdAt}</td>
-              <td>{item.memo}</td>
-            </tr>
-          )
-        })}
+        <tr>
+          <td>{memo.updatedAt}</td>
+          <td>{memo.memo}</td>
+        </tr>
       </tbody>
     </table>
   );
@@ -97,31 +110,31 @@ const MemoModal = (props) => {
       style={customStyles}
       contentLabel="Example Modal"
     >
-      <form onSubmit={handleSubmit}>
-        <div className="drinks" style={{display: "flex"}}>
-          <div className="drink">
-            <div className="beer" onClick={CountUp}>
-              <label>Beer</label>
-              <label>Count: {beerCount}</label>
-              <div style={{width: "10%"}} ><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></div>
-            </div>
-          </div>
-          <div className="drink">
-            <label>Highball</label>
-          </div>
-          <div className="drink">
-            <label>Sour</label>
+      <div className="drinks" style={{display: "flex"}}>
+        <div className="drink">
+          <div className="beer" onClick={CountUp}>
+            <label>Beer</label>
+            <label>Count: {beerCount}</label>
+            <div style={{width: "10%"}} ><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></div>
           </div>
         </div>
+        <div className="drink">
+          <label>Highball</label>
+        </div>
+        <div className="drink">
+          <label>Sour</label>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit}>
         <label>
           Memo:
           <input type="text" value={inputValue} onChange={ (e) => (setInputValue(e.target.value)) }/>
         </label>
         <input type="submit" value="Submit" />
       </form>
-      { memos !== undefined &&
+      { memo !== undefined &&
         <>
-          <label>Memos: </label>
+          <label>Memo: </label>
           <MemosList />
         </>
       }
