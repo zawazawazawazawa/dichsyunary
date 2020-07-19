@@ -7,21 +7,11 @@ import beer_icon from '../images/drink_beer.png'
 
 const MemoModal = (props) => {
   // TODO: 
-  // modalが開いたタイミングでfetchする
   // 毎度データをCreateしているのでUpdateへ変更
-  const initalBeerCount = () => {
-    (async () => {
-      const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
-      await API.graphql(graphqlOperation(listAlcohols, { filter: { date: { eq: formatedSelectedDay } } })
-              ).then(({ data: { listAlcohols } }) => {
-                console.log("count: ", listAlcohols.items.sort())
-                setBeerCount(listAlcohols.items[listAlcohols.items.length - 1]?.beer || 0);
-              });
-    })(); 
-  }
+
   const [memos, setMemos] = React.useState([]);
   const [inputValue, setInputValue] = React.useState('');
-  const [beerCount, setBeerCount] = React.useState(initalBeerCount);
+  const [beerCount, setBeerCount] = React.useState(0);
   Modal.setAppElement('#root')
 
   const customStyles = {
@@ -47,6 +37,15 @@ const MemoModal = (props) => {
       await API.graphql(graphqlOperation(listMemos, { filter: { date: { eq: formatedSelectedDay } } })
               ).then(({ data: { listMemos } }) => {
                 setMemos(listMemos.items);
+              });
+    })(); 
+    (async () => {
+      const formatedSelectedDay = new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
+      console.log("date using filter: ", formatedSelectedDay)
+      await API.graphql(graphqlOperation(listAlcohols, { filter: { date: { eq: formatedSelectedDay } } })
+              ).then(({ data: { listAlcohols } }) => {
+                console.log("count: ", listAlcohols.items.sort())
+                setBeerCount(listAlcohols.items[listAlcohols.items.length - 1]?.beer || 0);
               });
     })(); 
   }
@@ -99,8 +98,21 @@ const MemoModal = (props) => {
       contentLabel="Example Modal"
     >
       <form onSubmit={handleSubmit}>
-        <div style={{width: "10%"}} onClick={CountUp}><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></div>
-        <div>Beer Count: {beerCount}</div>
+        <div className="drinks" style={{display: "flex"}}>
+          <div className="drink">
+            <div className="beer" onClick={CountUp}>
+              <label>Beer</label>
+              <label>Count: {beerCount}</label>
+              <div style={{width: "10%"}} ><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></div>
+            </div>
+          </div>
+          <div className="drink">
+            <label>Highball</label>
+          </div>
+          <div className="drink">
+            <label>Sour</label>
+          </div>
+        </div>
         <label>
           Memo:
           <input type="text" value={inputValue} onChange={ (e) => (setInputValue(e.target.value)) }/>
