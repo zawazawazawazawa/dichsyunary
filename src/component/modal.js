@@ -4,11 +4,15 @@ import { listMemos, listAlcohols } from '../graphql/queries';
 import { API, graphqlOperation } from "aws-amplify";
 import * as mutations from '../graphql/mutations';
 import beer_icon from '../images/drink_beer.png'
+import highball_icon from '../images/highball.png'
+import sour_icon from '../images/sour.png'
 
 const MemoModal = (props) => {
-  const [memo, setMemo] = React.useState();
+  const [memo, setMemo] = React.useState(null);
   const [inputValue, setInputValue] = React.useState('');
   const [beerCount, setBeerCount] = React.useState(0);
+  const [highballCount, setHighballCount] = React.useState(0);
+  const [sourCount, setSourCount] = React.useState(0);
   const [alcoholeRecordID, setAlcoholeRecordID] = React.useState('');
   const [memoID, setMemoID] = React.useState('')
   Modal.setAppElement('#root')
@@ -44,6 +48,8 @@ const MemoModal = (props) => {
       await API.graphql(graphqlOperation(listAlcohols, { filter: { date: { eq: formatedSelectedDay } } })
               ).then(({ data: { listAlcohols } }) => {
                 setBeerCount(listAlcohols.items[listAlcohols.items.length - 1]?.beer || 0);
+                setHighballCount(listAlcohols.items[listAlcohols.items.length - 1]?.highball || 0);
+                setSourCount(listAlcohols.items[listAlcohols.items.length - 1]?.sour || 0);
                 setAlcoholeRecordID(listAlcohols.items[listAlcohols.items.length - 1]?.id || "")
               });
     })();
@@ -51,29 +57,39 @@ const MemoModal = (props) => {
 
   const handleSubmit = () => {
     (() => {
+      debugger
       if (memoID == "") {
+        // memoがなければ新規作成
         API.graphql(graphqlOperation(mutations.createMemo, {input: {
           memo: inputValue,
           date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
         }}));
-      } else {
+      } else if (memo !== "") {
+        // memoのレコードが存在し、フォームに新たに入力されていればその値で更新
         API.graphql(graphqlOperation(mutations.updateMemo, {input: {
           id: memoID,
           memo: inputValue,
           date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
         }}));
+      } else {
+        // memoのレコードは存在し、今回フォームに何も記入されていなければ更新しない
+        return
       }
 
 
       if (alcoholeRecordID === "") {
         API.graphql(graphqlOperation(mutations.createAlcohol, {input: {
           beer: beerCount,
+          highball: highballCount,
+          sour: sourCount,
           date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
         }}));
       } else {
         API.graphql(graphqlOperation(mutations.updateAlcohol, {input: {
           id: alcoholeRecordID,
           beer: beerCount,
+          highball: highballCount,
+          sour: sourCount,
           date: new Intl.DateTimeFormat('ja-JP').format(props.selectedDay)
         }}));
       }
@@ -98,8 +114,16 @@ const MemoModal = (props) => {
     </table>
   );
 
-  const CountUp = () => {
+  const CountUpBeer = () => {
     setBeerCount(beerCount + 1);
+  }
+
+  const CountUpHighball = () => {
+    setHighballCount(highballCount + 1);
+  }
+
+  const CountUpSour = () => {
+    setSourCount(sourCount + 1);
   }
 
   return (
@@ -112,17 +136,22 @@ const MemoModal = (props) => {
     >
       <div className="drinks" style={{display: "flex"}}>
         <div className="drink">
-          <div className="beer" onClick={CountUp}>
-            <label>Beer</label>
-            <label>Count: {beerCount}</label>
-            <div style={{width: "10%"}} ><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></div>
+          <div className="beer" onClick={CountUpBeer}>
+            <label>Beer: {beerCount}</label>
+            <div style={{width: "30%"}} ><img src={beer_icon} alt='ビールのアイコン' style={{width: "100%"}}/></div>
           </div>
         </div>
         <div className="drink">
-          <label>Highball</label>
+          <div className="highball" onClick={CountUpHighball}>
+            <label>Highball: {highballCount}</label>
+            <div style={{width: "30%"}} ><img src={highball_icon} alt='ハイボールのアイコン' style={{width: "100%"}}/></div>
+          </div>
         </div>
         <div className="drink">
-          <label>Sour</label>
+          <div className="sour" onClick={CountUpSour}>
+            <label>Sour: {sourCount}</label>
+            <div style={{width: "30%"}} ><img src={sour_icon} alt='サワーのアイコン' style={{width: "100%"}}/></div>
+          </div>
         </div>
       </div>
       <form onSubmit={handleSubmit}>
@@ -132,11 +161,8 @@ const MemoModal = (props) => {
         </label>
         <input type="submit" value="Submit" />
       </form>
-      { memo !== undefined &&
-        <>
-          <label>Memo: </label>
-          <MemosList />
-        </>
+      { memo !== null &&
+        <MemosList />
       }
     </Modal>
   )

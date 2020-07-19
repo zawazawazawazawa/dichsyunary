@@ -35,6 +35,8 @@ export const getAlcohol = /* GraphQL */ `
     getAlcohol(id: $id) {
       id
       beer
+      highball
+      sour
       date
       createdAt
       updatedAt
@@ -51,6 +53,8 @@ export const listAlcohols = /* GraphQL */ `
       items {
         id
         beer
+        highball
+        sour
         date
         createdAt
         updatedAt

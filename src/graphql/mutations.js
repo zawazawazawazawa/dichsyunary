@@ -51,6 +51,8 @@ export const createAlcohol = /* GraphQL */ `
     createAlcohol(input: $input, condition: $condition) {
       id
       beer
+      highball
+      sour
       date
       createdAt
       updatedAt
@@ -65,6 +67,8 @@ export const updateAlcohol = /* GraphQL */ `
     updateAlcohol(input: $input, condition: $condition) {
       id
       beer
+      highball
+      sour
       date
       createdAt
       updatedAt
@@ -79,6 +83,8 @@ export const deleteAlcohol = /* GraphQL */ `
     deleteAlcohol(input: $input, condition: $condition) {
       id
       beer
+      highball
+      sour
       date
       createdAt
       updatedAt

@@ -7,5 +7,7 @@ type Memo @model {
 type Alcohol @model {
   id: ID!
   beer: Int
+  highball: Int
+  sour: Int
   date: String!
 }

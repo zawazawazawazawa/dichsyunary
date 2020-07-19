@@ -39,6 +39,8 @@ export const onCreateAlcohol = /* GraphQL */ `
     onCreateAlcohol {
       id
       beer
+      highball
+      sour
       date
       createdAt
       updatedAt
@@ -50,6 +52,8 @@ export const onUpdateAlcohol = /* GraphQL */ `
     onUpdateAlcohol {
       id
       beer
+      highball
+      sour
       date
       createdAt
       updatedAt
@@ -61,6 +65,8 @@ export const onDeleteAlcohol = /* GraphQL */ `
     onDeleteAlcohol {
       id
       beer
+      highball
+      sour
       date
       createdAt
       updatedAt
