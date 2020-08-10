@@ -133,11 +133,11 @@ const MemoModal = (props) => {
 
   const CalcurateAlcoholByVolume = () => {
     // ドリンクの種類の数だけここの計算が走る
-    return (
+    return Math.round((
       beerCount * alcoholByVolume['beer'] * 350
       + highballCount * alcoholByVolume['highball'] * 350
       + sourCount * alcoholByVolume['sour'] * 350
-    ) * 0.8
+    ) * 0.8)
   }
 
   useEffect(() => {
@@ -174,7 +174,7 @@ const MemoModal = (props) => {
       </div>
       <div className='tatalABV'>
         <label>Total Alcohol By Volume</label>
-        <div>{CalcurateAlcoholByVolume()}</div>
+        <div>{CalcurateAlcoholByVolume()} ml</div>
       </div>
       <form onSubmit={handleSubmit}>
         <label>
