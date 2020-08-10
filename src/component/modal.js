@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { listMemos, listAlcohols } from '../graphql/queries';
 import { API, graphqlOperation } from "aws-amplify";
@@ -8,14 +8,20 @@ import highball_icon from '../images/highball.png'
 import sour_icon from '../images/sour.png'
 
 const MemoModal = (props) => {
-  const [memo, setMemo] = React.useState(null);
-  const [inputValue, setInputValue] = React.useState('');
-  const [beerCount, setBeerCount] = React.useState(0);
-  const [highballCount, setHighballCount] = React.useState(0);
-  const [sourCount, setSourCount] = React.useState(0);
-  const [alcoholeRecordID, setAlcoholeRecordID] = React.useState('');
-  const [memoID, setMemoID] = React.useState('')
+  const [memo, setMemo] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [beerCount, setBeerCount] = useState(0);
+  const [highballCount, setHighballCount] = useState(0);
+  const [sourCount, setSourCount] = useState(0);
+  const [alcoholeRecordID, setAlcoholeRecordID] = useState('');
+  const [memoID, setMemoID] = useState('')
   Modal.setAppElement('#root')
+
+  const alcoholByVolume = {
+    beer: 0.07,
+    highball: 0.07,
+    sour: 0.05
+  }
 
   const customStyles = {
     content : {
@@ -125,6 +131,19 @@ const MemoModal = (props) => {
     setSourCount(sourCount + 1);
   }
 
+  const CalcurateAlcoholByVolume = () => {
+    // ドリンクの種類の数だけここの計算が走る
+    return (
+      beerCount * alcoholByVolume['beer'] * 350
+      + highballCount * alcoholByVolume['highball'] * 350
+      + sourCount * alcoholByVolume['sour'] * 350
+    ) * 0.8
+  }
+
+  useEffect(() => {
+    console.log('waiwai', CalcurateAlcoholByVolume());
+  })
+
   return (
     <Modal
       isOpen={props.isOpen}
@@ -152,6 +171,10 @@ const MemoModal = (props) => {
             <div style={{width: "30%"}} ><img src={sour_icon} alt='サワーのアイコン' style={{width: "100%"}}/></div>
           </div>
         </div>
+      </div>
+      <div className='tatalABV'>
+        <label>Total Alcohol By Volume</label>
+        <div>{CalcurateAlcoholByVolume()}</div>
       </div>
       <form onSubmit={handleSubmit}>
         <label>
