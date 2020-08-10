@@ -57,7 +57,6 @@ const MemoModal = (props) => {
 
   const handleSubmit = () => {
     (() => {
-      debugger
       if (memoID == "") {
         // memoがなければ新規作成
         API.graphql(graphqlOperation(mutations.createMemo, {input: {
